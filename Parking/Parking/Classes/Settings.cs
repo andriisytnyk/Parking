@@ -10,7 +10,7 @@ namespace Parking.Classes
 {
     public class Settings
     {
-        readonly Dictionary<CarType, int> prices;
+        protected Dictionary<CarType, int> prices;
         public int TimeOut { get; protected set; }
         public int ParkingSpace { get; protected set; }
         public double Fine { get; protected set; }

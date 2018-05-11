@@ -6,9 +6,24 @@ using System.Threading.Tasks;
 
 namespace Parking.Classes
 {
-    enum CarType { Passenger, Truck, Bus, Motorcycle};
+    public enum CarType { Passenger, Truck, Bus, Motorcycle};
 
     class Car
     {
+        object locker = new object();
+        public int Id { get; set; }
+        public double Balance { get; set; }
+        public CarType Type { get; set; }
+
+        public Car(double balance, CarType type)
+        {
+            lock(locker)
+            {
+                Id = Parking.GlobCarId;
+                Parking.GlobCarId++;
+                Balance = balance;
+                Type = type;
+            }
+        }
     }
 }

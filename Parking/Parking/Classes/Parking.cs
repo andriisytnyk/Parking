@@ -12,6 +12,9 @@ namespace Parking.Classes
 
         public static Parking Instance { get { return lazy.Value; } }
 
+        public static int GlobCarId { get; set; }
+        public static int GlobTransId { get; set; }
+
         private Parking()
         {
 
