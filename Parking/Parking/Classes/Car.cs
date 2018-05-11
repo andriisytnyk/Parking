@@ -8,7 +8,7 @@ namespace Parking.Classes
 {
     public enum CarType { Passenger, Truck, Bus, Motorcycle};
 
-    class Car
+    public class Car
     {
         object locker = new object();
         public int Id { get; set; }

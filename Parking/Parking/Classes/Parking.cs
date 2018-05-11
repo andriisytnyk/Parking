@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Parking.Classes
 {
-    public sealed class Parking
+    public class Parking
     {
         private static readonly Lazy<Parking> lazy = new Lazy<Parking>(() => new Parking());
 
@@ -15,9 +15,20 @@ namespace Parking.Classes
         public static int GlobCarId { get; set; }
         public static int GlobTransId { get; set; }
 
+        public readonly Settings settings;
+
+        public List<Car> ListOfCars;
+        public List<Transaction> ListOfTransactions;
+        public double income { get; protected set; }
+
         private Parking()
         {
-
+            GlobCarId = 1;
+            GlobTransId = 1;
+            settings = new Settings();
+            ListOfCars = new List<Car>();
+            ListOfTransactions = new List<Transaction>();
+            income = 0;
         }
     }
 }

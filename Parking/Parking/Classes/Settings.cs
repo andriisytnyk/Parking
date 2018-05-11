@@ -29,6 +29,8 @@ namespace Parking.Classes
             ParkingSpace = Convert.ToInt32(generalSettings["ParkingSpace"]);
             Fine = Convert.ToDouble(generalSettings["Fine"]);
 
+            prices = new Dictionary<CarType, int>();
+
             var paymentSettings = (ConfigurationManager.GetSection("parkingSettings/paymentSettings") as System.Collections.Hashtable)
                     .Cast<System.Collections.DictionaryEntry>()
                     .ToDictionary(item => item.Key.ToString(), item => item.Value.ToString());

@@ -45,6 +45,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Classes\Car.cs" />
+    <Compile Include="Classes\Menu.cs" />
     <Compile Include="Classes\Parking.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Classes\Settings.cs" />
