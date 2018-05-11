@@ -1,35 +1,41 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Configuration;
 
 namespace Parking.Classes
 {
-    class Settings
+    public class Settings
     {
-        Dictionary<CarType, int> prices;
-        public int TimeOut { get; set; }
-        public int ParkingSpace { get; set; }
-        public double Fine { get; set; }
+        readonly Dictionary<CarType, int> prices;
+        public int TimeOut { get; protected set; }
+        public int ParkingSpace { get; protected set; }
+        public double Fine { get; protected set; }
 
         public Settings()
         {
-            prices = new Dictionary<CarType, int>()
-            {
-                { CarType.Truck, 5 },
-                { CarType.Passenger, 3 },
-                { CarType.Bus, 2 },
-                { CarType.Motorcycle, 1 }
-            };
-            TimeOut = 3;
-            ParkingSpace = 50;
-            Fine = 1.1;
+            SettingsReader();
         }
 
-        public void FileReader()
+        private void SettingsReader()
         {
+            var generalSettings = (ConfigurationManager.GetSection("parkingSettings/generalSettings") as System.Collections.Hashtable)
+                    .Cast <System.Collections.DictionaryEntry>()
+                    .ToDictionary(item => item.Key.ToString(), item => item.Value.ToString());
+            TimeOut = Convert.ToInt32(generalSettings["Timeout"]);
+            ParkingSpace = Convert.ToInt32(generalSettings["ParkingSpace"]);
+            Fine = Convert.ToDouble(generalSettings["Fine"]);
 
+            var paymentSettings = (ConfigurationManager.GetSection("parkingSettings/paymentSettings") as System.Collections.Hashtable)
+                    .Cast<System.Collections.DictionaryEntry>()
+                    .ToDictionary(item => item.Key.ToString(), item => item.Value.ToString());
+            prices[CarType.Truck] = Convert.ToInt32(paymentSettings["Truck"]);
+            prices[CarType.Passenger] = Convert.ToInt32(paymentSettings["Passenger"]);
+            prices[CarType.Bus] = Convert.ToInt32(paymentSettings["Bus"]);
+            prices[CarType.Motorcycle] = Convert.ToInt32(paymentSettings["Motorcycle"]);
         }
     }
 }

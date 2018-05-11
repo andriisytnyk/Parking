@@ -1,1 +1,7 @@
 E:\Alexandr\Repo\allprojects\Parking\Parking\bin\Debug\Parking.exe.config
+C:\Users\Andrii\Documents\GitHub\Parking\Parking\Parking\bin\Debug\Parking.exe.config
+C:\Users\Andrii\Documents\GitHub\Parking\Parking\Parking\bin\Debug\Parking.exe
+C:\Users\Andrii\Documents\GitHub\Parking\Parking\Parking\bin\Debug\Parking.pdb
+C:\Users\Andrii\Documents\GitHub\Parking\Parking\Parking\obj\Debug\Parking.csprojResolveAssemblyReference.cache
+C:\Users\Andrii\Documents\GitHub\Parking\Parking\Parking\obj\Debug\Parking.exe
+C:\Users\Andrii\Documents\GitHub\Parking\Parking\Parking\obj\Debug\Parking.pdb
