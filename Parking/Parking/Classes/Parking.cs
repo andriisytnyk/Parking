@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -21,8 +22,11 @@ namespace Parking.Classes
         private List<Car> ListOfCars;
         private List<Transaction> ListOfTransactions;
 
-        private TimerCallback tcb;
+        private TimerCallback tcbTrans;
         private Dictionary<Car, Timer> dictTimers;
+
+        private TimerCallback tcbSunTrans;
+        private Timer timerTrans;
         
         private double income { get; set; }
 
@@ -33,8 +37,10 @@ namespace Parking.Classes
             settings = new Settings();
             ListOfCars = new List<Car>();
             ListOfTransactions = new List<Transaction>();
-            tcb = new TimerCallback(Instance.Transaction);
+            tcbTrans = new TimerCallback(Transaction);
             dictTimers = new Dictionary<Car, Timer>();
+            tcbSunTrans = new TimerCallback(SumOfTransactions);
+            timerTrans = new Timer(tcbSunTrans, null, 20000, 20000);
             income = 0;
         }
 
@@ -43,15 +49,13 @@ namespace Parking.Classes
 
         }
 
-        public void AddCar(CarType type)
+        public void AddCar(double balance, CarType type)
         {
-            Console.WriteLine("Write a balance of your car: ");
-            var balance = Convert.ToDouble(Console.ReadLine());
             ListOfCars.Add(new Car(balance, type));
-            var id = Instance.ListOfCars[Instance.ListOfCars.Count - 1].Id;
+            var id = ListOfCars[ListOfCars.Count - 1].Id;
             Console.WriteLine("The car was added successfully! Car id: " + id);
 
-            dictTimers.Add(ListOfCars[id], new Timer(tcb, id, Instance.settings.TimeOut * 1000, Instance.settings.TimeOut * 1000));
+            dictTimers.Add(ListOfCars[ListOfCars.Count - 1], new Timer(tcbTrans, id, settings.TimeOut * 1000, settings.TimeOut * 1000));
         }
 
         public void RemoveCar(int id)
@@ -68,6 +72,21 @@ namespace Parking.Classes
                 Console.WriteLine("Check id you wrote. Was not found anyone car with such id!");
             }
             Console.WriteLine("Your car was removed successfully!");
+        }
+
+        public void ShowCar(int id)
+        {
+            try
+            {
+                var car = Instance.ListOfCars.Find(obj => obj.Id == id);
+                Console.WriteLine("Type of your car: " + car.Type.ToString());
+                Console.WriteLine("Balance of your car: " + car.Balance);
+                Console.WriteLine("Fine of your car: " + car.Fine);
+            }
+            catch
+            {
+                Console.WriteLine("Check id you wrote. Was not found anyone car with such id!");
+            }
         }
 
         public void TopUpBalance()
@@ -120,6 +139,33 @@ namespace Parking.Classes
                 ListOfCars[indexOfCar].Balance -= priceOfTrans;
                 income += priceOfTrans;
                 ListOfTransactions.Add(new Transaction(id, priceOfTrans));
+            }
+        }
+
+        private void SumOfTransactions(object obj)
+        {
+            double sum = 0;
+            var time = DateTime.Now;
+            time = time.AddMinutes(-1);
+            foreach (var item in ListOfTransactions)
+            {
+                if (item.Date >= time)
+                {
+                    sum += item.Tax;
+                }
+                else
+                {
+                    ListOfTransactions.Remove(item);
+                }
+            }
+
+            var FileName = Directory.GetParent(Directory.GetParent(Directory.GetCurrentDirectory()).FullName).FullName + "\\AppData\\Transactions.log";
+            if (File.Exists(FileName))
+            {
+                using (var sw = new StreamWriter(FileName, true))
+                {
+                    sw.WriteLine("Sum: " + sum + ", time: " + time);
+                }
             }
         }
     }

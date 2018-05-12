@@ -8,7 +8,7 @@ namespace Parking.Classes
 {
     public class Transaction
     {
-        static object locker = new object();
+        private object locker = new object();
         public DateTime Date { get; set; }
         public int IdTrans { get; set; }
         public int IdCar { get; set; }

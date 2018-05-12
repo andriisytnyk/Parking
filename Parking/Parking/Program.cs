@@ -1,11 +1,6 @@
 ﻿using Parking.Classes;
 using System;
 using System.Collections.Generic;
-using System.Configuration;
-using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace Parking
 {
@@ -16,7 +11,7 @@ namespace Parking
         {
             //ShowHistoryForOneMinute, ShowLog, ShowIncomeForOneMinute, ShowCommonIncome
             ListOfMenus.Add(new Menu(StartParking, Exit));
-            ListOfMenus.Add(new Menu(AddCar, RemoveCar, TopUpBalance, ShowFreePlaces, Exit));
+            ListOfMenus.Add(new Menu(AddCar, RemoveCar, ShowCar, TopUpBalance, ShowFreePlaces, Exit));
             ListOfMenus.Add(new Menu(PickTruck, PickPassenger, PickBus, PickMotorcycle));
             ListOfMenus.Add(new Menu(TurnBack));
             ListOfMenus[0].Show(false);
@@ -44,28 +39,36 @@ namespace Parking
         static void PickTruck()
         {
             Console.Clear();
-            Classes.Parking.Instance.AddCar(CarType.Truck);
+            Console.WriteLine("Write a balance of your car: ");
+            var balance = Convert.ToDouble(Console.ReadLine());
+            Classes.Parking.Instance.AddCar(balance, CarType.Truck);
             ListOfMenus[3].Show(false);
         }
 
         static void PickPassenger()
         {
             Console.Clear();
-            Classes.Parking.Instance.AddCar(CarType.Passenger);
+            Console.WriteLine("Write a balance of your car: ");
+            var balance = Convert.ToDouble(Console.ReadLine());
+            Classes.Parking.Instance.AddCar(balance, CarType.Passenger);
             ListOfMenus[3].Show(false);
         }
 
         static void PickBus()
         {
             Console.Clear();
-            Classes.Parking.Instance.AddCar(CarType.Bus);
+            Console.WriteLine("Write a balance of your car: ");
+            var balance = Convert.ToDouble(Console.ReadLine());
+            Classes.Parking.Instance.AddCar(balance, CarType.Bus);
             ListOfMenus[3].Show(false);
         }
 
         static void PickMotorcycle()
         {
             Console.Clear();
-            Classes.Parking.Instance.AddCar(CarType.Motorcycle);
+            Console.WriteLine("Write a balance of your car: ");
+            var balance = Convert.ToDouble(Console.ReadLine());
+            Classes.Parking.Instance.AddCar(balance, CarType.Motorcycle);
             ListOfMenus[3].Show(false);
         }
 
@@ -75,6 +78,15 @@ namespace Parking
             Console.WriteLine("Write id of your car: ");
             var id = Convert.ToInt32(Console.ReadLine());
             Classes.Parking.Instance.RemoveCar(id);
+            ListOfMenus[3].Show(false);
+        }
+
+        static void ShowCar()
+        {
+            Console.Clear();
+            Console.WriteLine("Write id of your car: ");
+            var id = Convert.ToInt32(Console.ReadLine());
+            Classes.Parking.Instance.ShowCar(id);
             ListOfMenus[3].Show(false);
         }
 

@@ -10,7 +10,7 @@ namespace Parking.Classes
 
     public class Car
     {
-        object locker = new object();
+        private object locker = new object();
         public int Id { get; set; }
         public double Balance { get; set; }
         public double Fine { get; set; }

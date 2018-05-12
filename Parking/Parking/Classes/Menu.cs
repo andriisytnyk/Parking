@@ -65,6 +65,7 @@ namespace Parking.Classes
                     Methods[SelectedItem]();
                     break;
                 default:
+                    KeyPress();
                     break;
             }
         }
@@ -80,6 +81,12 @@ namespace Parking.Classes
         {
             SelectedItem = SelectedItem == 0 ? Methods.Count - 1 : SelectedItem - 1;
             Console.SetCursorPosition(0, top);
+            Show(false);
+        }
+
+        private void KeyPress()
+        {
+            Console.Clear();
             Show(false);
         }
     }
