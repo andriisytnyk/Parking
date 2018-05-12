@@ -46,7 +46,6 @@ namespace Parking.Classes
             }
             Console.ResetColor();
             Console.ForegroundColor = ConsoleColor.DarkGray;
-            Console.WriteLine("Нажмите любую клавишу для выхода...");
             Console.ResetColor();
             WaitForInput();
         }
@@ -64,7 +63,8 @@ namespace Parking.Classes
                     break;
                 case ConsoleKey.Enter:
                     Methods[SelectedItem]();
-                    //Show();
+                    break;
+                default:
                     break;
             }
         }

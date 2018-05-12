@@ -1,6 +1,7 @@
 ﻿using Parking.Classes;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -13,9 +14,9 @@ namespace Parking
         public static List<Menu> ListOfMenus = new List<Menu>();
         static void Main(string[] args)
         {
-            //TopUpBalance, ShowHistoryForOneMinute, ShowLog, ShowIncomeForOneMinute, ShowCommonIncome, ShowFreePlaces, StopParking
+            //TopUpBalance, ShowHistoryForOneMinute, ShowLog, ShowIncomeForOneMinute, ShowCommonIncome
             ListOfMenus.Add(new Menu(StartParking, Settings, Exit));
-            ListOfMenus.Add(new Menu(AddCar, RemoveCar));
+            ListOfMenus.Add(new Menu(AddCar, RemoveCar, ShowFreePlaces, Exit));
             ListOfMenus.Add(new Menu(PickTruck, PickPassenger, PickBus, PickMotorcycle));
             ListOfMenus.Add(new Menu(TurnBack));
             ListOfMenus[0].Show(false);
@@ -30,7 +31,8 @@ namespace Parking
 
         static void Settings()
         {
-
+            Console.Clear();
+            ListOfMenus[4].Show(false);
         }
 
         static void Exit()
@@ -51,9 +53,8 @@ namespace Parking
             Console.WriteLine("Write a balance of your car: ");
             var balance = Convert.ToDouble(Console.ReadLine());
             Classes.Parking.Instance.ListOfCars.Add(new Car(balance, CarType.Truck));
-            Console.WriteLine("The car was added successfully!");
-            Thread.Sleep(1500);
-            ListOfMenus[1].Show(false);
+            Console.WriteLine("The car was added successfully! Car id: " + Classes.Parking.Instance.ListOfCars[Classes.Parking.Instance.ListOfCars.Count - 1].Id);
+            ListOfMenus[3].Show(false);
         }
 
         static void PickPassenger()
@@ -62,9 +63,8 @@ namespace Parking
             Console.WriteLine("Write a balance of your car: ");
             var balance = Convert.ToDouble(Console.ReadLine());
             Classes.Parking.Instance.ListOfCars.Add(new Car(balance, CarType.Passenger));
-            Console.WriteLine("The car was added successfully!");
-            Thread.Sleep(1500);
-            ListOfMenus[1].Show(false);
+            Console.WriteLine("The car was added successfully! Car id: " + Classes.Parking.Instance.ListOfCars[Classes.Parking.Instance.ListOfCars.Count - 1].Id);
+            ListOfMenus[3].Show(false);
         }
 
         static void PickBus()
@@ -73,9 +73,8 @@ namespace Parking
             Console.WriteLine("Write a balance of your car: ");
             var balance = Convert.ToDouble(Console.ReadLine());
             Classes.Parking.Instance.ListOfCars.Add(new Car(balance, CarType.Bus));
-            Console.WriteLine("The car was added successfully!");
-            Thread.Sleep(1500);
-            ListOfMenus[1].Show(false);
+            Console.WriteLine("The car was added successfully! Car id: " + Classes.Parking.Instance.ListOfCars[Classes.Parking.Instance.ListOfCars.Count - 1].Id);
+            ListOfMenus[3].Show(false);
         }
 
         static void PickMotorcycle()
@@ -84,9 +83,8 @@ namespace Parking
             Console.WriteLine("Write a balance of your car: ");
             var balance = Convert.ToDouble(Console.ReadLine());
             Classes.Parking.Instance.ListOfCars.Add(new Car(balance, CarType.Motorcycle));
-            Console.WriteLine("The car was added successfully!");
-            Thread.Sleep(1500);
-            ListOfMenus[1].Show(false);
+            Console.WriteLine("The car was added successfully! Car id: " + Classes.Parking.Instance.ListOfCars[Classes.Parking.Instance.ListOfCars.Count - 1].Id);
+            ListOfMenus[3].Show(false);
         }
 
         static void RemoveCar()
@@ -107,9 +105,14 @@ namespace Parking
                 ListOfMenus[1].Show(false);
             }
             Console.WriteLine("Your car was removed successfully!");
-            Thread.Sleep(1500);
+            ListOfMenus[3].Show(false);
+        }
+
+        static void ShowFreePlaces()
+        {
             Console.Clear();
-            ListOfMenus[1].Show(false);
+            Console.WriteLine("Count of free parking places: " + (Classes.Parking.Instance.settings.ParkingSpace - Classes.Parking.Instance.ListOfCars.Count) + "/" + Classes.Parking.Instance.settings.ParkingSpace);
+            ListOfMenus[3].Show(false);
         }
 
         static void TurnBack()
@@ -117,5 +120,6 @@ namespace Parking
             Console.Clear();
             ListOfMenus[1].Show(false);
         }
+
     }
 }

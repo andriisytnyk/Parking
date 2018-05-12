@@ -25,7 +25,7 @@ namespace Parking.Classes
             var generalSettings = (ConfigurationManager.GetSection("parkingSettings/generalSettings") as System.Collections.Hashtable)
                     .Cast <System.Collections.DictionaryEntry>()
                     .ToDictionary(item => item.Key.ToString(), item => item.Value.ToString());
-            TimeOut = Convert.ToInt32(generalSettings["Timeout"]);
+            TimeOut = Convert.ToInt32(generalSettings["TimeOut"]);
             ParkingSpace = Convert.ToInt32(generalSettings["ParkingSpace"]);
             Fine = Convert.ToDouble(generalSettings["Fine"]);
 
