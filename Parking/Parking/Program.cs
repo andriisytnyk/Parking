@@ -15,7 +15,7 @@ namespace Parking
         static void Main(string[] args)
         {
             //TopUpBalance, ShowHistoryForOneMinute, ShowLog, ShowIncomeForOneMinute, ShowCommonIncome
-            ListOfMenus.Add(new Menu(StartParking, Settings, Exit));
+            ListOfMenus.Add(new Menu(StartParking, Exit));
             ListOfMenus.Add(new Menu(AddCar, RemoveCar, ShowFreePlaces, Exit));
             ListOfMenus.Add(new Menu(PickTruck, PickPassenger, PickBus, PickMotorcycle));
             ListOfMenus.Add(new Menu(TurnBack));
@@ -27,12 +27,6 @@ namespace Parking
             var parking = Classes.Parking.Instance;
             Console.Clear();
             ListOfMenus[1].Show(false);
-        }
-
-        static void Settings()
-        {
-            Console.Clear();
-            ListOfMenus[4].Show(false);
         }
 
         static void Exit()
