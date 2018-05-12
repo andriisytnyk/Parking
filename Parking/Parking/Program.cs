@@ -16,7 +16,7 @@ namespace Parking
         {
             //TopUpBalance, ShowHistoryForOneMinute, ShowLog, ShowIncomeForOneMinute, ShowCommonIncome
             ListOfMenus.Add(new Menu(StartParking, Exit));
-            ListOfMenus.Add(new Menu(AddCar, RemoveCar, ShowFreePlaces, Exit));
+            ListOfMenus.Add(new Menu(AddCar, RemoveCar, TopUpBalance, ShowFreePlaces, Exit));
             ListOfMenus.Add(new Menu(PickTruck, PickPassenger, PickBus, PickMotorcycle));
             ListOfMenus.Add(new Menu(TurnBack));
             ListOfMenus[0].Show(false);
@@ -99,6 +99,18 @@ namespace Parking
                 ListOfMenus[1].Show(false);
             }
             Console.WriteLine("Your car was removed successfully!");
+            ListOfMenus[3].Show(false);
+        }
+
+        static void TopUpBalance()
+        {
+            Console.Clear();
+            Console.WriteLine("Write id of your car: ");
+            //var id = Convert.ToInt32(Console.ReadLine());
+            int index = Classes.Parking.Instance.ListOfCars.FindIndex(car => car.Id == Convert.ToInt32(Console.ReadLine()));
+            Console.WriteLine("Write new balance of your car: ");
+            Classes.Parking.Instance.ListOfCars[index].Balance = Convert.ToDouble(Console.ReadLine());
+            Console.WriteLine("Balance of your car was changed successfully!");
             ListOfMenus[3].Show(false);
         }
 
