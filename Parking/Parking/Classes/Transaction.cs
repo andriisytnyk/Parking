@@ -10,16 +10,18 @@ namespace Parking.Classes
     {
         static object locker = new object();
         public DateTime Date { get; set; }
-        public int Id { get; set; }
+        public int IdTrans { get; set; }
+        public int IdCar { get; set; }
         public double Tax { get; set; }
 
-        public Transaction(double tax)
+        public Transaction(int id, double tax)
         {
             lock(locker)
             {
                 Date = DateTime.Now;
-                Id = Parking.GlobTransId;
+                IdTrans = Parking.GlobTransId;
                 Parking.GlobTransId++;
+                IdCar = id;
                 Tax = tax;
             }
         }

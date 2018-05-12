@@ -13,6 +13,7 @@ namespace Parking.Classes
         object locker = new object();
         public int Id { get; set; }
         public double Balance { get; set; }
+        public double Fine { get; set; }
         public CarType Type { get; set; }
 
         public Car(double balance, CarType type)
@@ -22,6 +23,7 @@ namespace Parking.Classes
                 Id = Parking.GlobCarId;
                 Parking.GlobCarId++;
                 Balance = balance;
+                Fine = 0;
                 Type = type;
             }
         }

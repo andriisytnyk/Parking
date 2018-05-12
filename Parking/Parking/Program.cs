@@ -14,7 +14,7 @@ namespace Parking
         public static List<Menu> ListOfMenus = new List<Menu>();
         static void Main(string[] args)
         {
-            //TopUpBalance, ShowHistoryForOneMinute, ShowLog, ShowIncomeForOneMinute, ShowCommonIncome
+            //ShowHistoryForOneMinute, ShowLog, ShowIncomeForOneMinute, ShowCommonIncome
             ListOfMenus.Add(new Menu(StartParking, Exit));
             ListOfMenus.Add(new Menu(AddCar, RemoveCar, TopUpBalance, ShowFreePlaces, Exit));
             ListOfMenus.Add(new Menu(PickTruck, PickPassenger, PickBus, PickMotorcycle));
@@ -44,40 +44,28 @@ namespace Parking
         static void PickTruck()
         {
             Console.Clear();
-            Console.WriteLine("Write a balance of your car: ");
-            var balance = Convert.ToDouble(Console.ReadLine());
-            Classes.Parking.Instance.ListOfCars.Add(new Car(balance, CarType.Truck));
-            Console.WriteLine("The car was added successfully! Car id: " + Classes.Parking.Instance.ListOfCars[Classes.Parking.Instance.ListOfCars.Count - 1].Id);
+            Classes.Parking.Instance.AddCar(CarType.Truck);
             ListOfMenus[3].Show(false);
         }
 
         static void PickPassenger()
         {
             Console.Clear();
-            Console.WriteLine("Write a balance of your car: ");
-            var balance = Convert.ToDouble(Console.ReadLine());
-            Classes.Parking.Instance.ListOfCars.Add(new Car(balance, CarType.Passenger));
-            Console.WriteLine("The car was added successfully! Car id: " + Classes.Parking.Instance.ListOfCars[Classes.Parking.Instance.ListOfCars.Count - 1].Id);
+            Classes.Parking.Instance.AddCar(CarType.Passenger);
             ListOfMenus[3].Show(false);
         }
 
         static void PickBus()
         {
             Console.Clear();
-            Console.WriteLine("Write a balance of your car: ");
-            var balance = Convert.ToDouble(Console.ReadLine());
-            Classes.Parking.Instance.ListOfCars.Add(new Car(balance, CarType.Bus));
-            Console.WriteLine("The car was added successfully! Car id: " + Classes.Parking.Instance.ListOfCars[Classes.Parking.Instance.ListOfCars.Count - 1].Id);
+            Classes.Parking.Instance.AddCar(CarType.Bus);
             ListOfMenus[3].Show(false);
         }
 
         static void PickMotorcycle()
         {
             Console.Clear();
-            Console.WriteLine("Write a balance of your car: ");
-            var balance = Convert.ToDouble(Console.ReadLine());
-            Classes.Parking.Instance.ListOfCars.Add(new Car(balance, CarType.Motorcycle));
-            Console.WriteLine("The car was added successfully! Car id: " + Classes.Parking.Instance.ListOfCars[Classes.Parking.Instance.ListOfCars.Count - 1].Id);
+            Classes.Parking.Instance.AddCar(CarType.Motorcycle);
             ListOfMenus[3].Show(false);
         }
 
@@ -86,38 +74,21 @@ namespace Parking
             Console.Clear();
             Console.WriteLine("Write id of your car: ");
             var id = Convert.ToInt32(Console.ReadLine());
-            try
-            {
-                var car = Classes.Parking.Instance.ListOfCars.Find(obj => obj.Id == id);
-                Classes.Parking.Instance.ListOfCars.Remove(car);
-            }
-            catch
-            {
-                Console.WriteLine("Check id you wrote. Was not found anyone car with such id!");
-                Thread.Sleep(2000);
-                Console.Clear();
-                ListOfMenus[1].Show(false);
-            }
-            Console.WriteLine("Your car was removed successfully!");
+            Classes.Parking.Instance.RemoveCar(id);
             ListOfMenus[3].Show(false);
         }
 
         static void TopUpBalance()
         {
             Console.Clear();
-            Console.WriteLine("Write id of your car: ");
-            //var id = Convert.ToInt32(Console.ReadLine());
-            int index = Classes.Parking.Instance.ListOfCars.FindIndex(car => car.Id == Convert.ToInt32(Console.ReadLine()));
-            Console.WriteLine("Write new balance of your car: ");
-            Classes.Parking.Instance.ListOfCars[index].Balance = Convert.ToDouble(Console.ReadLine());
-            Console.WriteLine("Balance of your car was changed successfully!");
+            Classes.Parking.Instance.TopUpBalance();
             ListOfMenus[3].Show(false);
         }
 
         static void ShowFreePlaces()
         {
             Console.Clear();
-            Console.WriteLine("Count of free parking places: " + (Classes.Parking.Instance.settings.ParkingSpace - Classes.Parking.Instance.ListOfCars.Count) + "/" + Classes.Parking.Instance.settings.ParkingSpace);
+            Classes.Parking.Instance.ShowFreePlaces();
             ListOfMenus[3].Show(false);
         }
 
@@ -126,6 +97,5 @@ namespace Parking
             Console.Clear();
             ListOfMenus[1].Show(false);
         }
-
     }
 }
