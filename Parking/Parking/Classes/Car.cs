@@ -10,7 +10,7 @@ namespace Parking.Classes
 
     public class Car
     {
-        private object locker = new object();
+        private readonly object _locker = new object();
         public int Id { get; set; }
         public double Balance { get; set; }
         public double Fine { get; set; }
@@ -18,7 +18,7 @@ namespace Parking.Classes
 
         public Car(double balance, CarType type)
         {
-            lock(locker)
+            lock(_locker)
             {
                 Id = Parking.GlobCarId;
                 Parking.GlobCarId++;

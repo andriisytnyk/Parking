@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Parking.Classes
 {
-    class Menu
+    public class Menu
     {
         public delegate void MenuMethod();
         public List<MenuMethod> Methods;
@@ -20,18 +20,18 @@ namespace Parking.Classes
         public ConsoleColor ItemColor;
         public ConsoleColor SelectionColor;
         public int SelectedItem { get; private set; }
-        private int top;
+        private int _top;
 
         public void Show(bool addEmptyLineBefore = true)
         {
-            top = Console.CursorTop;
+            _top = Console.CursorTop;
             if (addEmptyLineBefore)
             {
                 Console.WriteLine();
-                top++;
+                _top++;
             }
             Console.ForegroundColor = ItemColor;
-            for (int i = 0; i < Methods.Count; i++)
+            for (var i = 0; i < Methods.Count; i++)
             {
                 if (i == SelectedItem)
                 {
@@ -52,7 +52,7 @@ namespace Parking.Classes
 
         private void WaitForInput()
         {
-            ConsoleKeyInfo cki = Console.ReadKey();
+            var cki = Console.ReadKey();
             switch (cki.Key)
             {
                 case ConsoleKey.DownArrow:
@@ -73,14 +73,14 @@ namespace Parking.Classes
         private void MoveDown()
         {
             SelectedItem = SelectedItem == Methods.Count - 1 ? 0 : SelectedItem + 1;
-            Console.SetCursorPosition(0, top);
+            Console.SetCursorPosition(0, _top);
             Show(false);
         }
 
         private void MoveUp()
         {
             SelectedItem = SelectedItem == 0 ? Methods.Count - 1 : SelectedItem - 1;
-            Console.SetCursorPosition(0, top);
+            Console.SetCursorPosition(0, _top);
             Show(false);
         }
 

@@ -4,39 +4,39 @@ using System.Collections.Generic;
 
 namespace Parking
 {
-    class Program
+    public class Program
     {
         public static List<Menu> ListOfMenus = new List<Menu>();
-        static void Main(string[] args)
+
+        private static void Main(string[] args)
         {
-            //ShowHistoryForOneMinute, ShowLog, ShowIncomeForOneMinute, ShowCommonIncome
             ListOfMenus.Add(new Menu(StartParking, Exit));
-            ListOfMenus.Add(new Menu(AddCar, RemoveCar, ShowCar, TopUpBalance, ShowFreePlaces, Exit));
+            ListOfMenus.Add(new Menu(AddCar, RemoveCar, ShowCar, TopUpBalance, ShowFreePlaces, ShowLog, ShowHistoryForOneMinute, ShowCommonIncome, ShowIncomeForOneMinute, Exit));
             ListOfMenus.Add(new Menu(PickTruck, PickPassenger, PickBus, PickMotorcycle));
             ListOfMenus.Add(new Menu(TurnBack));
             ListOfMenus[0].Show(false);
         }
 
-        static void StartParking()
+        private static void StartParking()
         {
             var parking = Classes.Parking.Instance;
             Console.Clear();
             ListOfMenus[1].Show(false);
         }
 
-        static void Exit()
+        private static void Exit()
         {
             Environment.Exit(0);
         }
 
-        static void AddCar()
+        private static void AddCar()
         {
             Console.Clear();
             Console.WriteLine("Choose a type of your car: ");
             ListOfMenus[2].Show(false);
         }
 
-        static void PickTruck()
+        private static void PickTruck()
         {
             Console.Clear();
             Console.WriteLine("Write a balance of your car: ");
@@ -45,7 +45,7 @@ namespace Parking
             ListOfMenus[3].Show(false);
         }
 
-        static void PickPassenger()
+        private static void PickPassenger()
         {
             Console.Clear();
             Console.WriteLine("Write a balance of your car: ");
@@ -54,7 +54,7 @@ namespace Parking
             ListOfMenus[3].Show(false);
         }
 
-        static void PickBus()
+        private static void PickBus()
         {
             Console.Clear();
             Console.WriteLine("Write a balance of your car: ");
@@ -63,7 +63,7 @@ namespace Parking
             ListOfMenus[3].Show(false);
         }
 
-        static void PickMotorcycle()
+        private static void PickMotorcycle()
         {
             Console.Clear();
             Console.WriteLine("Write a balance of your car: ");
@@ -72,7 +72,7 @@ namespace Parking
             ListOfMenus[3].Show(false);
         }
 
-        static void RemoveCar()
+        private static void RemoveCar()
         {
             Console.Clear();
             Console.WriteLine("Write id of your car: ");
@@ -81,7 +81,7 @@ namespace Parking
             ListOfMenus[3].Show(false);
         }
 
-        static void ShowCar()
+        private static void ShowCar()
         {
             Console.Clear();
             Console.WriteLine("Write id of your car: ");
@@ -90,21 +90,79 @@ namespace Parking
             ListOfMenus[3].Show(false);
         }
 
-        static void TopUpBalance()
+        private static void TopUpBalance()
         {
             Console.Clear();
             Classes.Parking.Instance.TopUpBalance();
             ListOfMenus[3].Show(false);
         }
 
-        static void ShowFreePlaces()
+        private static void ShowFreePlaces()
         {
             Console.Clear();
             Classes.Parking.Instance.ShowFreePlaces();
             ListOfMenus[3].Show(false);
         }
 
-        static void TurnBack()
+        private static void ShowLog()
+        {
+            Console.Clear();
+            List<string> listLog = Classes.Parking.Instance.GetLog();
+            foreach (var item in listLog)
+            {
+                Console.WriteLine(item);
+            }
+            ListOfMenus[3].Show(false);
+        }
+
+        private static void ShowHistoryForOneMinute()
+        {
+            Console.Clear();
+            var time = DateTime.Now;
+            time = time.AddMinutes(-1);
+            foreach (var item in Classes.Parking.Instance.ListOfTransactions)
+            {
+                if (item.Date >= time)
+                {
+                    Console.WriteLine(item.ToString());
+                }
+                else
+                {
+                    Classes.Parking.Instance.ListOfTransactions.Remove(item);
+                }
+            }
+            ListOfMenus[3].Show(false);
+        }
+
+        private static void ShowCommonIncome()
+        {
+            Console.Clear();
+            Console.WriteLine("Common Income: " + Classes.Parking.Instance.Income);
+            ListOfMenus[3].Show(false);
+        }
+
+        private static void ShowIncomeForOneMinute()
+        {
+            Console.Clear();
+            var time = DateTime.Now;
+            time = time.AddMinutes(-1);
+            double sum = 0;
+            foreach (var item in Classes.Parking.Instance.ListOfTransactions)
+            {
+                if (item.Date >= time)
+                {
+                    sum += item.Tax;
+                }
+                else
+                {
+                    Classes.Parking.Instance.ListOfTransactions.Remove(item);
+                }
+            }
+            Console.WriteLine("Income for last minute: " + sum);
+            ListOfMenus[3].Show(false);
+        }
+
+        private static void TurnBack()
         {
             Console.Clear();
             ListOfMenus[1].Show(false);

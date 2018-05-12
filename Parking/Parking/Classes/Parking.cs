@@ -1,52 +1,51 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 
 namespace Parking.Classes
 {
     public class Parking
     {
-        private static readonly Lazy<Parking> lazy = new Lazy<Parking>(() => new Parking());
+        private static readonly Lazy<Parking> Lazy = new Lazy<Parking>(() => new Parking());
 
-        public static Parking Instance { get { return lazy.Value; } }
+        public static Parking Instance { get { return Lazy.Value; } }
+
+        public string TransactionFileName { get; } = Directory.GetParent(Directory.GetParent(Directory.GetCurrentDirectory()).FullName).FullName + "\\AppData\\Transactions.log";
 
         public static int GlobCarId { get; set; }
         public static int GlobTransId { get; set; }
 
-        private readonly Settings settings;
+        private readonly Settings _settings;
 
-        private List<Car> ListOfCars;
-        private List<Transaction> ListOfTransactions;
+        public List<Car> ListOfCars { get; }
+        public List<Transaction> ListOfTransactions { get; }
 
-        private TimerCallback tcbTrans;
-        private Dictionary<Car, Timer> dictTimers;
+        private readonly TimerCallback _tcbTrans;
+        private readonly Dictionary<Car, Timer> _dictTimers;
 
-        private TimerCallback tcbSunTrans;
-        private Timer timerTrans;
-        
-        private double income { get; set; }
+        public double Income { get; private set; }
 
         private Parking()
         {
             GlobCarId = 1;
             GlobTransId = 1;
-            settings = new Settings();
+            _settings = new Settings();
             ListOfCars = new List<Car>();
             ListOfTransactions = new List<Transaction>();
-            tcbTrans = new TimerCallback(Transaction);
-            dictTimers = new Dictionary<Car, Timer>();
-            tcbSunTrans = new TimerCallback(SumOfTransactions);
-            timerTrans = new Timer(tcbSunTrans, null, 20000, 20000);
-            income = 0;
+            _tcbTrans = new TimerCallback(Transaction);
+            _dictTimers = new Dictionary<Car, Timer>();
+            var tcbSunTrans = new TimerCallback(SumOfTransactions);
+            var timer = new Timer(tcbSunTrans, null, 20000, 20000);
+            Income = 0;
         }
 
         ~Parking()
         {
-
+            foreach (var item in _dictTimers)
+            {
+                item.Value.Dispose();
+            }
         }
 
         public void AddCar(double balance, CarType type)
@@ -55,7 +54,7 @@ namespace Parking.Classes
             var id = ListOfCars[ListOfCars.Count - 1].Id;
             Console.WriteLine("The car was added successfully! Car id: " + id);
 
-            dictTimers.Add(ListOfCars[ListOfCars.Count - 1], new Timer(tcbTrans, id, settings.TimeOut * 1000, settings.TimeOut * 1000));
+            _dictTimers.Add(ListOfCars[ListOfCars.Count - 1], new Timer(_tcbTrans, id, _settings.TimeOut * 1000, _settings.TimeOut * 1000));
         }
 
         public void RemoveCar(int id)
@@ -63,8 +62,8 @@ namespace Parking.Classes
             try
             {
                 var car = Instance.ListOfCars.Find(obj => obj.Id == id);
-                dictTimers[car].Dispose();
-                dictTimers.Remove(car);
+                _dictTimers[car].Dispose();
+                _dictTimers.Remove(car);
                 Instance.ListOfCars.Remove(car);
             }
             catch
@@ -79,7 +78,7 @@ namespace Parking.Classes
             try
             {
                 var car = Instance.ListOfCars.Find(obj => obj.Id == id);
-                Console.WriteLine("Type of your car: " + car.Type.ToString());
+                Console.WriteLine("Type of your car: " + car.Type);
                 Console.WriteLine("Balance of your car: " + car.Balance);
                 Console.WriteLine("Fine of your car: " + car.Fine);
             }
@@ -105,12 +104,12 @@ namespace Parking.Classes
                 if (money <= Instance.ListOfCars[index].Fine)
                 {
                     Instance.ListOfCars[index].Fine -= money;
-                    income += money;
+                    Income += money;
                     ListOfTransactions.Add(new Transaction(id, money));
                 }
                 else
                 {
-                    income += Instance.ListOfCars[index].Fine;
+                    Income += Instance.ListOfCars[index].Fine;
                     ListOfTransactions.Add(new Transaction(id, Instance.ListOfCars[index].Fine));
                     Instance.ListOfCars[index].Balance += money - Instance.ListOfCars[index].Fine;
                     Instance.ListOfCars[index].Fine = 0;
@@ -121,23 +120,23 @@ namespace Parking.Classes
 
         public void ShowFreePlaces()
         {
-            Console.WriteLine("Count of free parking places: " + (Instance.settings.ParkingSpace - Instance.ListOfCars.Count) + "/" + Instance.settings.ParkingSpace);
+            Console.WriteLine("Count of free parking places: " + (Instance._settings.ParkingSpace - Instance.ListOfCars.Count) + "/" + Instance._settings.ParkingSpace);
         }
 
         private void Transaction(object obj)
         {
             var id = (int)obj;
             var indexOfCar = ListOfCars.FindIndex(car => car.Id == id);
-            double priceOfTrans = settings.prices[ListOfCars[indexOfCar].Type];
+            double priceOfTrans = _settings.Prices[ListOfCars[indexOfCar].Type];
             if (priceOfTrans > ListOfCars[indexOfCar].Balance)
             {
-                priceOfTrans *= settings.Fine;
+                priceOfTrans *= _settings.Fine;
                 ListOfCars[indexOfCar].Fine += priceOfTrans;
             }
             else
             {
                 ListOfCars[indexOfCar].Balance -= priceOfTrans;
-                income += priceOfTrans;
+                Income += priceOfTrans;
                 ListOfTransactions.Add(new Transaction(id, priceOfTrans));
             }
         }
@@ -159,14 +158,30 @@ namespace Parking.Classes
                 }
             }
 
-            var FileName = Directory.GetParent(Directory.GetParent(Directory.GetCurrentDirectory()).FullName).FullName + "\\AppData\\Transactions.log";
-            if (File.Exists(FileName))
+            if (File.Exists(TransactionFileName))
             {
-                using (var sw = new StreamWriter(FileName, true))
+                using (var sw = new StreamWriter(TransactionFileName, true))
                 {
                     sw.WriteLine("Sum: " + sum + ", time: " + time);
                 }
             }
+        }
+
+        public List<string> GetLog()
+        {
+            var list = new List<string>();
+            if (File.Exists(TransactionFileName))
+            {
+                using (var sr = new StreamReader(TransactionFileName))
+                {
+                    string s;
+                    while ((s = sr.ReadLine()) != null)
+                    {
+                        list.Add(s);
+                    }
+                }
+            }
+            return list;
         }
     }
 }
