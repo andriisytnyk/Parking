@@ -64,7 +64,7 @@ namespace Parking.Classes
                     break;
                 case ConsoleKey.Enter:
                     Methods[SelectedItem]();
-                    Show();
+                    //Show();
                     break;
             }
         }
